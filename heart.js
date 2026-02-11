@@ -1,5 +1,5 @@
 // Heart curve: (x^2 + y^2 - 1)^3 = x^2 * y^3
-// This is an implicit equation, so we'll use parametric approach
+// Using standard parametric equations for this curve
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
@@ -15,7 +15,7 @@ const centerX = width / 2;
 const centerY = height / 2;
 
 // Scale factor to fit the heart nicely in the canvas
-const scale = 200;
+const scale = 180;
 
 // Clear canvas with white background
 function clearCanvas() {
@@ -23,18 +23,17 @@ function clearCanvas() {
     ctx.fillRect(0, 0, width, height);
 }
 
-// Generate points for the heart curve using parametric equations
-// For the curve (x^2 + y^2 - 1)^3 = x^2 * y^3
-// We can use: x = sin(t)^3, y = (13*cos(t) - 5*cos(2t) - 2*cos(3t) - cos(4t))/16
+// Generate points for the heart curve (x^2 + y^2 - 1)^3 = x^2 * y^3
+// Standard parametric form: x = sin(t)^3, y = (13*cos(t) - 5*cos(2t) - 2*cos(3t) - cos(4t))/16
 function generateHeartPoints(numPoints = 1000) {
     const points = [];
     
     for (let i = 0; i <= numPoints; i++) {
         const t = (i / numPoints) * 2 * Math.PI;
         
-        // Parametric equations for heart curve
-        const x = 16 * Math.pow(Math.sin(t), 3);
-        const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+        // Standard parametric equations for this heart curve
+        const x = Math.pow(Math.sin(t), 3);
+        const y = (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) / 16;
         
         points.push({ x, y });
     }
@@ -67,8 +66,8 @@ function drawHeart() {
         const point = points[currentPoint];
         
         // Transform coordinates to canvas space
-        const canvasX = centerX + point.x * scale / 16;
-        const canvasY = centerY - point.y * scale / 16; // Invert Y axis
+        const canvasX = centerX + point.x * scale;
+        const canvasY = centerY - point.y * scale; // Invert Y axis
         
         if (currentPoint === 0) {
             ctx.moveTo(canvasX, canvasY);
