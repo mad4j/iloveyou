@@ -17,8 +17,7 @@
         }
         
         #svg-container {
-            border: 1px solid #e0e0e0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: block;
         }
         
         .container {
@@ -28,8 +27,8 @@
 </head>
 <body>
     <div class="container">
-        <svg id="svg-container" width="800" height="800" xmlns="http://www.w3.org/2000/svg">
-            <rect width="800" height="800" fill="#ffffff"/>
+        <svg id="svg-container" xmlns="http://www.w3.org/2000/svg">
+            <rect id="background-rect" fill="#ffffff"/>
         </svg>
     </div>
     <script src="heart.js"></script>
