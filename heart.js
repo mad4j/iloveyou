@@ -1,27 +1,16 @@
 // Heart curve based on the function (x^2 + y^2 - 1)^3 = x^2 * y^3
 // Using parametric equations for a heart shape: x = sin(t)^3, y = (13*cos(t) - 5*cos(2t) - 2*cos(3t) - cos(4t))/16
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d', { alpha: false });
+const svg = document.getElementById('svg-container');
 
-// High quality rendering settings with antialiasing
-ctx.imageSmoothingEnabled = true;
-ctx.imageSmoothingQuality = 'high';
-
-// Canvas dimensions
-const width = canvas.width;
-const height = canvas.height;
+// SVG dimensions
+const width = 800;
+const height = 800;
 const centerX = width / 2;
 const centerY = height / 2;
 
-// Scale factor to fit the heart nicely in the canvas
+// Scale factor to fit the heart nicely in the SVG
 const scale = 180;
-
-// Clear canvas with white background
-function clearCanvas() {
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, width, height);
-}
 
 // Generate points for the heart curve
 // Parametric form: x = sin(t)^3, y = (13*cos(t) - 5*cos(2t) - 2*cos(3t) - cos(4t))/16
@@ -45,42 +34,40 @@ function generateHeartPoints(numPoints = 1000) {
 let currentPoint = 0;
 const points = generateHeartPoints(1000);
 let pointsPerFrame = 2; // number of points to draw per frame
+let pathData = ''; // Accumulated path data
+
+// Create SVG path element
+const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+pathElement.setAttribute('stroke', '#ff0000'); // Red color
+pathElement.setAttribute('stroke-width', '3');
+pathElement.setAttribute('stroke-linecap', 'round');
+pathElement.setAttribute('stroke-linejoin', 'round');
+pathElement.setAttribute('fill', 'none');
+svg.appendChild(pathElement);
 
 // Draw function with animation
 function drawHeart() {
-    if (currentPoint === 0) {
-        clearCanvas();
-        
-        // Setup drawing style with improved antialiasing
-        ctx.strokeStyle = '#ff0000'; // Red color
-        ctx.lineWidth = 3;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        
-        // Enable antialiasing for smoother lines
-        ctx.globalCompositeOperation = 'source-over';
-        
-        // Begin path
-        ctx.beginPath();
-    }
-    
     // Draw next segment
     if (currentPoint < points.length) {
-        const point = points[currentPoint];
-        
-        // Transform coordinates to canvas space
-        const canvasX = centerX + point.x * scale;
-        const canvasY = centerY - point.y * scale; // Invert Y axis
-        
-        if (currentPoint === 0) {
-            ctx.moveTo(canvasX, canvasY);
-        } else {
-            ctx.lineTo(canvasX, canvasY);
+        // Append only new points to path data
+        const endPoint = Math.min(currentPoint + pointsPerFrame, points.length);
+        for (let i = currentPoint; i < endPoint; i++) {
+            const point = points[i];
+            
+            // Transform coordinates to SVG space
+            const svgX = centerX + point.x * scale;
+            const svgY = centerY - point.y * scale; // Invert Y axis
+            
+            if (i === 0) {
+                pathData += `M ${svgX} ${svgY} `;
+            } else {
+                pathData += `L ${svgX} ${svgY} `;
+            }
         }
         
-        ctx.stroke();
+        pathElement.setAttribute('d', pathData);
         
-        currentPoint = Math.floor(currentPoint + pointsPerFrame);
+        currentPoint = endPoint;
         
         // Continue animation
         requestAnimationFrame(drawHeart);
