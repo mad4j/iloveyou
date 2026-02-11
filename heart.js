@@ -2,15 +2,32 @@
 // Using parametric equations for a heart shape: x = sin(t)^3, y = (13*cos(t) - 5*cos(2t) - 2*cos(3t) - cos(4t))/16
 
 const svg = document.getElementById('svg-container');
+const backgroundRect = document.getElementById('background-rect');
 
-// SVG dimensions
-const width = 800;
-const height = 800;
-const centerX = width / 2;
-const centerY = height / 2;
+// SVG dimensions - calculated from window size
+let width, height, centerX, centerY, scale;
 
-// Scale factor to fit the heart nicely in the SVG
-const scale = 180;
+function updateDimensions() {
+    // Use window dimensions for the SVG
+    width = window.innerWidth;
+    height = window.innerHeight;
+    
+    // Update SVG dimensions
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+    backgroundRect.setAttribute('width', width);
+    backgroundRect.setAttribute('height', height);
+    
+    centerX = width / 2;
+    centerY = height / 2;
+    
+    // Scale factor to fit the heart nicely in the SVG - based on smaller dimension
+    const minDimension = Math.min(width, height);
+    scale = minDimension * 0.225; // 22.5% of the smaller dimension
+}
+
+// Initialize dimensions
+updateDimensions();
 
 // Generate points for the heart curve
 // Parametric form: x = sin(t)^3, y = (13*cos(t) - 5*cos(2t) - 2*cos(3t) - cos(4t))/16
@@ -35,6 +52,7 @@ let currentPoint = 0;
 const points = generateHeartPoints(1000);
 let pointsPerFrame = 2; // number of points to draw per frame
 let pathData = ''; // Accumulated path data
+let animationId = null; // To track animation frame
 
 // Create SVG path element
 const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -70,10 +88,32 @@ function drawHeart() {
         currentPoint = endPoint;
         
         // Continue animation
-        requestAnimationFrame(drawHeart);
+        animationId = requestAnimationFrame(drawHeart);
     }
     // Animation complete - do not restart
 }
+
+// Reset and restart animation
+function restartAnimation() {
+    // Cancel any ongoing animation
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+    }
+    
+    // Reset animation state
+    currentPoint = 0;
+    pathData = '';
+    pathElement.setAttribute('d', '');
+    
+    // Update dimensions
+    updateDimensions();
+    
+    // Start animation
+    drawHeart();
+}
+
+// Handle window resize
+window.addEventListener('resize', restartAnimation);
 
 // Start the animation
 drawHeart();
