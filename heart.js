@@ -2,9 +2,9 @@
 // Using parametric equations for a heart shape: x = sin(t)^3, y = (13*cos(t) - 5*cos(2t) - 2*cos(3t) - cos(4t))/16
 
 const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d', { alpha: false });
 
-// High quality rendering settings
+// High quality rendering settings with antialiasing
 ctx.imageSmoothingEnabled = true;
 ctx.imageSmoothingQuality = 'high';
 
@@ -51,11 +51,14 @@ function drawHeart() {
     if (currentPoint === 0) {
         clearCanvas();
         
-        // Setup drawing style
+        // Setup drawing style with improved antialiasing
         ctx.strokeStyle = '#ff0000'; // Red color
         ctx.lineWidth = 3;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
+        
+        // Enable antialiasing for smoother lines
+        ctx.globalCompositeOperation = 'source-over';
         
         // Begin path
         ctx.beginPath();
@@ -81,13 +84,8 @@ function drawHeart() {
         
         // Continue animation
         requestAnimationFrame(drawHeart);
-    } else {
-        // Animation complete, restart after a delay
-        setTimeout(() => {
-            currentPoint = 0;
-            requestAnimationFrame(drawHeart);
-        }, 2000);
     }
+    // Animation complete - do not restart
 }
 
 // Start the animation
