@@ -23,7 +23,7 @@ function updateDimensions() {
     
     // Scale factor to fit the heart nicely in the SVG - based on smaller dimension
     const minDimension = Math.min(width, height);
-    scale = minDimension * 0.30; // 30% of the smaller dimension
+    scale = minDimension * 0.50; // 50% of the smaller dimension
 }
 
 // Initialize dimensions
