@@ -33,7 +33,7 @@ function generateHeartPoints(numPoints = 1000) {
 // Animation variables
 let currentPoint = 0;
 const points = generateHeartPoints(1000);
-let pointsPerFrame = 2; // number of points to draw per frame
+let pointsPerFrame = 20; // number of points to draw per frame
 let pathData = ''; // Accumulated path data
 
 // Create SVG path element
