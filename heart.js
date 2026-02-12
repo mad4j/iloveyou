@@ -125,30 +125,3 @@ pathElement.setAttribute('stroke-width', strokeWidth);
 
 // Start the animation
 drawHeart();
-
-// Pull-to-refresh functionality
-const PULL_TO_REFRESH_START_THRESHOLD = 50; // Maximum Y position to start gesture
-const PULL_TO_REFRESH_DISTANCE_THRESHOLD = 100; // Minimum pull distance to trigger reload
-
-let touchStartY = 0;
-let touchEndY = 0;
-
-document.addEventListener('touchstart', (e) => {
-    touchStartY = e.touches[0].clientY;
-}, { passive: true });
-
-document.addEventListener('touchmove', (e) => {
-    touchEndY = e.touches[0].clientY;
-}, { passive: true });
-
-document.addEventListener('touchend', () => {
-    // Check if page is at the top and user pulled down from near the top
-    const isAtTop = (window.scrollY || document.documentElement.scrollTop) === 0;
-    const isPullDownGesture = touchStartY < PULL_TO_REFRESH_START_THRESHOLD && 
-                               touchEndY - touchStartY > PULL_TO_REFRESH_DISTANCE_THRESHOLD;
-    
-    if (isAtTop && isPullDownGesture) {
-        // Reload the page
-        window.location.reload();
-    }
-}, { passive: true });
