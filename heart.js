@@ -5,7 +5,7 @@ const svg = document.getElementById('svg-container');
 const backgroundRect = document.getElementById('background-rect');
 
 // SVG dimensions - calculated from window size
-let width, height, centerX, centerY, scale;
+let width, height, centerX, centerY, scale, strokeWidth;
 
 function updateDimensions() {
     // Use window dimensions for the SVG
@@ -24,6 +24,9 @@ function updateDimensions() {
     // Scale factor to fit the heart nicely in the SVG - based on smaller dimension
     const minDimension = Math.min(width, height);
     scale = minDimension * 0.40; // 40% of the smaller dimension
+    
+    // Responsive stroke width based on viewport size
+    strokeWidth = Math.max(2, minDimension * 0.005); // 0.5% of smaller dimension, minimum 2px
 }
 
 // Initialize dimensions
@@ -57,7 +60,6 @@ let animationId = null; // To track animation frame
 // Create SVG path element
 const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 pathElement.setAttribute('stroke', '#ff0000'); // Red color
-pathElement.setAttribute('stroke-width', '3');
 pathElement.setAttribute('stroke-linecap', 'round');
 pathElement.setAttribute('stroke-linejoin', 'round');
 pathElement.setAttribute('fill', 'none');
@@ -108,12 +110,18 @@ function restartAnimation() {
     // Update dimensions
     updateDimensions();
     
+    // Update stroke width
+    pathElement.setAttribute('stroke-width', strokeWidth);
+    
     // Start animation
     drawHeart();
 }
 
 // Handle window resize
 window.addEventListener('resize', restartAnimation);
+
+// Set initial stroke width
+pathElement.setAttribute('stroke-width', strokeWidth);
 
 // Start the animation
 drawHeart();

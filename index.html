@@ -2,52 +2,89 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#ff0000">
+    <meta name="description" content="Visualizzazione animata della curva del cuore per San Valentino">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="I ♥ You">
     <title>I Love You - Heart Curve</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="favicon.svg">
     <style>
-        body {
+        * {
+            box-sizing: border-box;
+        }
+        
+        html, body {
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: fixed;
             background-color: #ffffff;
             font-family: Arial, sans-serif;
         }
         
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
         #svg-container {
             display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
         
         .container {
+            width: 100vw;
+            height: 100vh;
             text-align: center;
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
         
         .equation {
-            position: absolute;
-            top: 20px;
+            position: fixed;
+            top: 2vh;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 24px;
+            font-size: calc(12px + 1.5vmin);
+            font-weight: normal;
+            color: rgba(0, 0, 0, 0.4);
+            z-index: 10;
+            user-select: none;
+            white-space: nowrap;
+            padding: 0 2vw;
+        }
+        
+        .countdown {
+            position: fixed;
+            bottom: 2vh;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: calc(16px + 2vmin);
             font-weight: normal;
             color: rgba(0, 0, 0, 0.4);
             z-index: 10;
             user-select: none;
         }
         
-        .countdown {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 24px;
-            font-weight: normal;
-            color: rgba(0, 0, 0, 0.4);
-            z-index: 10;
-            user-select: none;
+        @media (max-height: 400px) {
+            .equation {
+                font-size: calc(10px + 1vmin);
+                top: 1vh;
+            }
+            .countdown {
+                font-size: calc(12px + 1.5vmin);
+                bottom: 1vh;
+            }
         }
     </style>
 </head>
@@ -60,5 +97,19 @@
         <div class="countdown" id="countdown"></div>
     </div>
     <script src="heart.js"></script>
+    <script>
+        // Register service worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registered successfully:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
