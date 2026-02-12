@@ -23,11 +23,25 @@
         
         .container {
             text-align: center;
+            position: relative;
+        }
+        
+        .equation {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: normal;
+            color: rgba(0, 0, 0, 0.4);
+            z-index: 10;
+            user-select: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="equation">(x² + y² - 1)³ = x² · y³</div>
         <svg id="svg-container" xmlns="http://www.w3.org/2000/svg">
             <rect id="background-rect" fill="#ffffff"/>
         </svg>
