@@ -117,3 +117,38 @@ window.addEventListener('resize', restartAnimation);
 
 // Start the animation
 drawHeart();
+
+// Calculate days until Valentine's Day
+function updateValentineCountdown() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset to midnight for accurate day comparison
+    const currentYear = today.getFullYear();
+    
+    // Valentine's Day is February 14
+    let valentineDay = new Date(currentYear, 1, 14); // Month is 0-indexed, so 1 = February
+    valentineDay.setHours(0, 0, 0, 0);
+    
+    // If Valentine's Day has passed this year, calculate for next year
+    if (today > valentineDay) {
+        valentineDay.setFullYear(currentYear + 1);
+    }
+    
+    // Calculate the difference in milliseconds
+    const diffTime = valentineDay - today;
+    
+    // Convert to days
+    const daysRemaining = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    // Update the countdown element
+    const countdownElement = document.getElementById('countdown');
+    if (daysRemaining === 0) {
+        countdownElement.textContent = 'Buon San Valentino!';
+    } else if (daysRemaining === 1) {
+        countdownElement.textContent = '1 giorno a San Valentino';
+    } else {
+        countdownElement.textContent = `${daysRemaining} giorni a San Valentino`;
+    }
+}
+
+// Update countdown on page load
+updateValentineCountdown();
