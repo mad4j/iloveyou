@@ -30,10 +30,11 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
+    }).then(() => {
+      // Claim clients immediately
+      return self.clients.claim();
     })
   );
-  // Claim clients immediately
-  return self.clients.claim();
 });
 
 // Fetch resources from cache first, then network
