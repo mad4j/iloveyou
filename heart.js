@@ -183,7 +183,7 @@ document.addEventListener('touchmove', (e) => {
 
 document.addEventListener('touchend', () => {
     // Check if page is at the top and user pulled down from near the top
-    const isAtTop = window.scrollY === 0 || document.documentElement.scrollTop === 0;
+    const isAtTop = (window.scrollY || document.documentElement.scrollTop) === 0;
     const isPullDownGesture = touchStartY < PULL_TO_REFRESH_START_THRESHOLD && 
                                touchEndY - touchStartY > PULL_TO_REFRESH_DISTANCE_THRESHOLD;
     
