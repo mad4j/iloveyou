@@ -4,6 +4,41 @@
 const svg = document.getElementById('svg-container');
 const backgroundRect = document.getElementById('background-rect');
 
+// Haptics (Vibration API)
+// Note: many browsers require a user gesture before vibration works.
+let hapticsEnabled = false;
+
+function safeVibrate(pattern) {
+    if (!hapticsEnabled) return false;
+    if (!('vibrate' in navigator)) return false;
+    try {
+        return navigator.vibrate(pattern);
+    } catch {
+        return false;
+    }
+}
+
+function enableHapticsOnce() {
+    if (hapticsEnabled) return;
+    hapticsEnabled = true;
+    // Tiny acknowledgement vibration
+    safeVibrate(10);
+}
+
+function triggerVisualHaptic() {
+    // Restart CSS animation reliably by removing then re-adding the class
+    svg.classList.remove('haptic-shake');
+    // Force reflow so the animation can retrigger
+    void svg.offsetWidth;
+    svg.classList.add('haptic-shake');
+    window.setTimeout(() => svg.classList.remove('haptic-shake'), 300);
+}
+
+// Enable haptics after any user gesture
+window.addEventListener('pointerdown', enableHapticsOnce, { once: true, passive: true });
+window.addEventListener('touchstart', enableHapticsOnce, { once: true, passive: true });
+window.addEventListener('keydown', enableHapticsOnce, { once: true });
+
 // SVG dimensions - calculated from window size
 let width, height, centerX, centerY, scale, strokeWidth;
 
@@ -93,6 +128,11 @@ function drawHeart() {
         animationId = requestAnimationFrame(drawHeart);
     }
     // Animation complete - do not restart
+    else {
+        // Brief haptic feedback when the drawing is completed
+        safeVibrate(25);
+        triggerVisualHaptic();
+    }
 }
 
 // Reset and restart animation
@@ -106,7 +146,10 @@ function restartAnimation() {
     currentPoint = 0;
     pathData = '';
     pathElement.setAttribute('d', '');
-    
+
+    // Reset any visual haptic state
+    svg.classList.remove('haptic-shake');
+
     // Update dimensions
     updateDimensions();
     

@@ -40,6 +40,20 @@
             top: 0;
             left: 0;
         }
+
+        /* Visual haptic feedback: subtle shake */
+        .haptic-shake {
+            animation: hearthcurve-shake 250ms linear;
+        }
+
+        @keyframes hearthcurve-shake {
+            0% { transform: translate3d(0, 0, 0); }
+            20% { transform: translate3d(-2px, 1px, 0); }
+            40% { transform: translate3d(2px, -1px, 0); }
+            60% { transform: translate3d(-1px, -1px, 0); }
+            80% { transform: translate3d(1px, 1px, 0); }
+            100% { transform: translate3d(0, 0, 0); }
+        }
         
         .container {
             width: 100vw;
